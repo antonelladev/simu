@@ -1,0 +1,235 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// ==========================================
+// ESTRUCTURAS DE DATOS
+// ==========================================
+
+// Estructura para registrar los datos de un estudiante
+struct Estudiante {
+    string nombre;
+    float notaMomento1;
+    float notaMomento2;
+    float notaMomento3;
+    float promedioFinal;
+    bool aprobado;
+};
+
+// Estructura para la simulación de un circuito básico (Hardware/Electrónica)
+struct Circuito {
+    float voltaje;
+    float resistencia;
+    float corriente;
+};
+
+// ==========================================
+// FUNCIONES AUXILIARES (Paso a Paso)
+// ==========================================
+
+// Función para limpiar la pantalla en la consola de forma sencilla
+void limpiarPantalla() {
+    cout << "\n-----------------------------------------\n";
+}
+
+// Función para calcular el promedio de tres momentos y verificar si aprueba
+void calcularRendimiento(Estudiante &est) {
+    est.promedioFinal = (est.notaMomento1 + est.notaMomento2 + est.notaMomento3) / 3.0;
+    
+    // En muchas instituciones se aprueba con 51 o más
+    if (est.promedioFinal >= 51.0) {
+        est.aprobado = true;
+    } else {
+        est.aprobado = false;
+    }
+}
+
+// ==========================================
+// PROGRAMA PRINCIPAL
+// ==========================================
+
+int main() {
+    // Variables de control del sistema
+    int opcionPrincipal = 0;
+    
+    // Base de datos limitada para el ejemplo (máximo 5 estudiantes)
+    Estudiante listaEstudiantes[5];
+    int cantidadEstudiantes = 0;
+
+    while (opcionPrincipal != 4) {
+        limpiarPantalla();
+        cout << "====== SISTEMA INTEGRADO DE INGENIERIA ======" << endl;
+        cout << "1. Gestionar Estudiantes y Notas" << endl;
+        cout << "2. Simulador de Ley de Ohm (Circuitos)" << endl;
+        cout << "3. Ver Reporte de Metas Academicas" << endl;
+        cout << "4. Salir del Programa" << endl;
+        cout << "=============================================" << endl;
+        cout << "Selecciona una opcion: ";
+        cin >> opcionPrincipal;
+
+        switch (opcionPrincipal) {
+            
+            case 1: {
+                // SUBMENÚ: GESTIÓN DE ESTUDIANTES
+                int opcionEstudiantes = 0;
+                while (opcionEstudiantes != 3) {
+                    limpiarPantalla();
+                    cout << "--- SUBMENU: GESTION DE ESTUDIANTES ---" << endl;
+                    cout << "1. Registrar nuevo estudiante" << endl;
+                    cout << "2. Mostrar lista de estudiantes" << endl;
+                    cout << "3. Volver al menu principal" << endl;
+                    cout << "Selecciona una opcion: ";
+                    cin >> opcionEstudiantes;
+
+                    if (opcionEstudiantes == 1) {
+                        if (cantidadEstudiantes < 5) {
+                            Estudiante nuevoEst;
+                            cout << "\nIngrese el nombre del estudiante (sin espacios): ";
+                            cin >> nuevoEst.nombre;
+                            
+                            // Validación básica de notas
+                            cout << "Nota Momento 1 (0-100): ";
+                            cin >> nuevoEst.notaMomento1;
+                            cout << "Nota Momento 2 (0-100): ";
+                            cin >> nuevoEst.notaMomento2;
+                            cout << "Nota Momento 3 (0-100): ";
+                            cin >> nuevoEst.notaMomento3;
+
+                            // Calcular promedio automáticamente usando nuestra función
+                            calcularRendimiento(nuevoEst);
+
+                            // Guardar en el arreglo
+                            listaEstudiantes[cantidadEstudiantes] = nuevoEst;
+                            cantidadEstudiantes++;
+                            cout << "\n¡Estudiante registrado con exito!" << endl;
+                        } else {
+                            cout << "\nError: Memoria llena. Limite de 5 estudiantes alcanzado." << endl;
+                        }
+                    } 
+                    else if (opcionEstudiantes == 2) {
+                        if (cantidadEstudiantes == 0) {
+                            cout << "\nNo hay estudiantes registrados todavia." << endl;
+                        } else {
+                            cout << "\n--- LISTA DE ESTUDIANTES REGISTRADOS ---" << endl;
+                            for (int i = 0; i < cantidadEstudiantes; i++) {
+                                cout << "ID: " << i + 1 << " | Nombre: " << listaEstudiantes[i].nombre << endl;
+                                cout << " > Notas: [" << listaEstudiantes[i].notaMomento1 << ", " 
+                                     << listaEstudiantes[i].notaMomento2 << ", " 
+                                     << listaEstudiantes[i].notaMomento3 << "]" << endl;
+                                cout << " > Promedio: " << listaEstudiantes[i].promedioFinal << "%" << endl;
+                                cout << " > Estado: " << (listaEstudiantes[i].aprobado ? "APROBADO" : "REPROBADO") << endl;
+                                cout << "-------------------------------------" << endl;
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+
+            case 2: {
+                // SUBMENÚ: SIMULADOR DE ELECTRÓNICA (LEY DE OHM)
+                int opcionOhm = 0;
+                limpiarPantalla();
+                cout << "--- SIMULADOR DE LEY DE OHM ---" << endl;
+                cout << "¿Que componente deseas calcular?" << endl;
+                cout << "1. Corriente (I = V / R)" << endl;
+                cout << "2. Voltaje (V = I * R)" << endl;
+                cout << "3. Resistencia (R = V / I)" << endl;
+                cout << "Selecciona una opcion: ";
+                cin >> opcionOhm;
+
+                Circuito miCircuito = {0.0, 0.0, 0.0};
+
+                if (opcionOhm == 1) {
+                    cout << "Introduce el Voltaje (V): ";
+                    cin >> miCircuito.voltaje;
+                    cout << "Introduce la Resistencia (Ohm): ";
+                    cin >> miCircuito.resistencia;
+                    
+                    if (miCircuito.resistencia != 0) {
+                        miCircuito.corriente = miCircuito.voltaje / miCircuito.resistencia;
+                        cout << "\n>> Resultado: La corriente resultante es de " << miCircuito.corriente << " Amperios." << endl;
+                    } else {
+                        cout << "\nError: La resistencia no puede ser cero (division por cero)." << endl;
+                    }
+                } 
+                else if (opcionOhm == 2) {
+                    cout << "Introduce la Corriente (A): ";
+                    cin >> miCircuito.corriente;
+                    cout << "Introduce la Resistencia (Ohm): ";
+                    cin >> miCircuito.resistencia;
+                    
+                    miCircuito.voltaje = miCircuito.corriente * miCircuito.resistencia;
+                    cout << "\n>> Resultado: El voltaje necesario es de " << miCircuito.voltaje << " Voltios." << endl;
+                } 
+                else if (opcionOhm == 3) {
+                    cout << "Introduce el Voltaje (V): ";
+                    cin >> miCircuito.voltaje;
+                    cout << "Introduce la Corriente (A): ";
+                    cin >> miCircuito.corriente;
+                    
+                    if (miCircuito.corriente != 0) {
+                        miCircuito.resistencia = miCircuito.voltaje / miCircuito.corriente;
+                        cout << "\n>> Resultado: La resistencia requerida es de " << miCircuito.resistencia << " Ohmios." << endl;
+                    } else {
+                        cout << "\nError: La corriente no puede ser cero." << endl;
+                    }
+                } else {
+                    cout << "\nOpcion no valida en el simulador." << endl;
+                }
+                break;
+            }
+
+            case 3: {
+                // REPORTE DE METAS METRICAS
+                limpiarPantalla();
+                cout << "--- REPORTE DE METAS ACADEMICAS GLOBALES ---" << endl;
+                if (cantidadEstudiantes == 0) {
+                    cout << "No hay datos suficientes para generar un reporte global." << endl;
+                } else {
+                    float sumaPromedios = 0.0;
+                    int aprobadosTotales = 0;
+                    int superanMeta70 = 0;
+
+                    for (int i = 0; i < cantidadEstudiantes; i++) {
+                        sumaPromedios += listaEstudiantes[i].promedioFinal;
+                        if (listaEstudiantes[i].aprobado) {
+                            aprobadosTotales++;
+                        }
+                        if (listaEstudiantes[i].promedioFinal >= 70.0) {
+                            superanMeta70++;
+                        }
+                    }
+
+                    float promedioGeneralCurso = sumaPromedios / cantidadEstudiantes;
+
+                    cout << "Cantidad de estudiantes evaluados: " << cantidadEstudiantes << endl;
+                    cout << "Promedio general del curso: " << promedioGeneralCurso << "%" << endl;
+                    cout << "Total aprobados: " << aprobadosTotales << endl;
+                    cout << "Total que superan el objetivo del 70%: " << superanMeta70 << endl;
+                    
+                    // Evaluacion del estado del curso
+                    if (promedioGeneralCurso >= 70.0) {
+                        cout << "Estado del grupo: EXCELENTE. El promedio supera la meta establecida." << endl;
+                    } else if (promedioGeneralCurso >= 51.0) {
+                        cout << "Estado del grupo: REGULAR. Estan aprobados, pero bajo la meta del 70%." << endl;
+                    } else {
+                        cout << "Estado del grupo: ALERTA. El promedio general es de reprobacion." << endl;
+                    }
+                }
+                break;
+            }
+
+            case 4:
+                cout << "\nSaliendo del sistema integrado. ¡Buen trabajo en tus codigos!" << endl;
+                break;
+
+            default:
+                cout << "\nOpcion invalida en el menu principal. Intenta de nuevo." << endl;
+                break;
+        }
+    }
+
+    return 0;
+}
